@@ -1,25 +1,27 @@
-# TÍTULO DO PROJETO
+# VARAL INTELIGENTE #
 
-`CAMPUS/UNIDADE`
+## Gerais
 
-`CURSO`
+- Pontifícia Universidade Católica de Minas Gerais - Campus Coração Eucarístico -
 
-`SEMESTRE`
+- Engenharia da Computação
 
-`DISCIPLINA`
+- 1º Semestre
+
+- Laboratório de Introdução à Engenharia de Computação
 
 
 ## Integrantes
 
 * Gabriel Maia Simões de Matos
-* Nome completo do aluno 2
-* Nome completo do aluno 3
-* Nome completo do aluno 4
-* Nome completo do aluno 5
+* Eduarda Katherine Dutra Teixeira
+* Ana Clara Barboza da Silva
+* Bolivar Mauricio Gomes Siqueira
+* Fernanda Ayrosa Menezes Silva
 
 ## Orientador
 
-* Nome completo do professor 1
+* Marta Dias Moreira Noronha
 
 ## Resumo
 
