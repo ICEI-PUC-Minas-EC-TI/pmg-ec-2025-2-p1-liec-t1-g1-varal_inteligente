@@ -25,7 +25,7 @@
 
 ## Resumo
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo desenvolvido.
+A proposta do presente trabalho consiste no desenvolvimento de um sistema automatizado de varal inteligente, implementado por meio do microcontrolador ESP32. O projeto tem como finalidade integrar sensores de umidade e de fumaça, bem como um módulo de controle remoto, a fim de proporcionar maior autonomia e praticidade ao usuário. Dessa forma, o sistema será capaz de recolher automaticamente o varal em situações adversas, como chuva ou detecção de fumaça, além de permitir a operação manual conforme a conveniência do usuário, contribuindo para a otimização do uso doméstico e a segurança das vestimentas.
 
 # Código (do arduino ou esp32)
 
