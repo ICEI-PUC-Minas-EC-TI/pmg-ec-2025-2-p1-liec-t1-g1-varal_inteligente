@@ -1,6 +1,10 @@
 # Introdução
 
-Texto descritivo com a visão geral do projeto abordado. Inclui o contexto, o problema, os objetivos, a justificativa e o público-alvo do projeto.
+O projeto Varal Inteligente propõe a automação de um varal de roupas utilizando Arduino, sensores de chuva e fumaça, servo motor e um aplicativo Android.
+A ideia surge do cenário típico de quem mora em casas ou apartamentos sem área de serviço coberta, em cidades com clima instável: basta uma chuva rápida ou fumaça vinda de queimadas, churrascos ou poluição para estragar as roupas que estavam secando.
+
+Na rotina corrida, o usuário nem sempre está em casa ou atento ao tempo para recolher as roupas a tempo. Além disso, pessoas idosas, com mobilidade reduzida ou que moram sozinhas podem ter ainda mais dificuldade em cuidar dessa tarefa.
+Diante desse contexto, o projeto busca oferecer uma solução simples, de baixo custo e fácil de usar, que monitore o ambiente e proteja as roupas automaticamente, mantendo a opção de controle manual pelo celular.
 
 ## Problema
 
