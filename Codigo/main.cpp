@@ -121,10 +121,8 @@ void enviarStatusTexto() {
 
  
   BT.print(estadoByte);
-  BT.print(';');
   BT.print(umidByte);
-  BT.print(';');
-  BT.println(fumaByte);
+  BT.print(fumaByte);
 
   Serial.print("Status texto -> ");
   Serial.print(estadoByte);
