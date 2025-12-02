@@ -1,0 +1,146 @@
+#include <SoftwareSerial.h>
+#include <Servo.h>
+
+// Bluetooth HC-05: RX no 2, TX no 3
+SoftwareSerial BT(2, 3);  // RX, TX
+
+// Servo
+Servo varal;
+const int SERVO_PIN = 9;
+
+// Sensores (mesmos pinos que você já usa)
+const int PINO_CHUVA  = A0;
+const int PINO_FUMACA = A1;
+
+// Limiares (ajuste se precisar)
+int limiarChuva  = 500;  // chuva: valor < 500 = molhado
+int limiarFumaca = 30;   // fumaça: valor > 30 = fumaça
+
+// Estado do sistema
+bool varalFechado = false;
+
+// Leituras atuais
+int valorChuva  = 0;
+int valorFumaca = 0;
+
+// Antitremedeira de movimento
+unsigned long ultimoMovimento    = 0;
+const unsigned long intervaloMov = 3000; // 3s
+
+void moverVaral(bool fechar);
+void enviarStatusBytes();
+
+void setup() {
+  Serial.begin(9600);
+  BT.begin(9600);
+
+  Serial.println("Varal automatico - Arduino + HC05");
+
+  varal.attach(SERVO_PIN);
+  varal.write(0);   // começa ABERTO
+  varalFechado = false;
+
+  pinMode(PINO_CHUVA,  INPUT);
+  pinMode(PINO_FUMACA, INPUT);
+}
+
+void loop() {
+  // --------- LEITURA DOS SENSORES ---------
+  valorChuva  = analogRead(PINO_CHUVA);
+  valorFumaca = analogRead(PINO_FUMACA);
+
+  bool detectouChuva  = (valorChuva  < limiarChuva);
+  bool detectouFumaca = (valorFumaca > limiarFumaca);
+
+  Serial.print("Chuva=");
+  Serial.print(valorChuva);
+  Serial.print(detectouChuva ? " (UMIDO)" : " (SECO)");
+  Serial.print(" | Fumaca=");
+  Serial.print(valorFumaca);
+  Serial.println(detectouFumaca ? " (FUMACA)" : " (OK)");
+
+  // --------- CONTROLE AUTOMATICO SEMPRE LIGADO ---------
+  bool deveFechar = (detectouChuva || detectouFumaca);
+
+  if (deveFechar && !varalFechado &&
+      (millis() - ultimoMovimento > intervaloMov)) {
+
+    Serial.println("AUTO: fechando por sensor...");
+    moverVaral(true);
+  } 
+  else if (!deveFechar && varalFechado &&
+           (millis() - ultimoMovimento > intervaloMov)) {
+
+    Serial.println("AUTO: abrindo, ambiente seguro...");
+    moverVaral(false);
+  }
+
+  // --------- COMANDOS VIA BLUETOOTH ---------
+  if (BT.available()) {
+    char cmd = BT.read();
+    Serial.print("Comando recebido: ");
+    Serial.println(cmd);
+
+    switch (cmd) {
+      case 'G':   // FECHAR varal (guardar)
+        Serial.println("MANUAL: fechar varal (G)");
+        moverVaral(true);
+        break;
+
+      case 'E':   // ABRIR varal (expor)
+        Serial.println("MANUAL: abrir varal (E)");
+        moverVaral(false);
+        break;
+
+      case 'S':   // STATUS
+        Serial.println("BT: pedido de STATUS (S)");
+        enviarStatusBytes();
+        break;
+
+      default:
+        Serial.println("BT: comando desconhecido");
+        // se quiser, pode mandar uma msg de erro por texto aqui
+        break;
+    }
+  }
+
+  delay(150);
+}
+
+void moverVaral(bool fechar) {
+  if (fechar) {
+    varal.write(90);      // ajusta se precisar
+    varalFechado = true;
+    Serial.println("Varal FECHADO (90 graus)");
+  } else {
+    varal.write(0);
+    varalFechado = false;
+    Serial.println("Varal ABERTO (0 graus)");
+  }
+  ultimoMovimento = millis();
+}
+
+// Envia 3 BYTES: [estado, umidade, fumaca]
+//  estado: 0 = aberto, 1 = fechado
+//  umidade: 0 = seco, 1 = umido
+//  fumaca: 0 = OK, 1 = fumaça detectada
+void enviarStatusBytes() {
+  bool detectouChuva  = (valorChuva  < limiarChuva);
+  bool detectouFumaca = (valorFumaca > limiarFumaca);
+
+  byte estadoByte = varalFechado   ? 1 : 0;
+  byte umidByte   = detectouChuva  ? 1 : 0;
+  byte fumaByte   = detectouFumaca ? 1 : 0;
+
+  BT.write(estadoByte);
+  BT.write(umidByte);
+  BT.write(fumaByte);
+
+  // Debug só no Serial (USB)
+  Serial.print("Status bytes -> ");
+  Serial.print((int)estadoByte);
+  Serial.print(",");
+  Serial.print((int)umidByte);
+  Serial.print(",");
+  Serial.println((int)fumaByte);
+}
