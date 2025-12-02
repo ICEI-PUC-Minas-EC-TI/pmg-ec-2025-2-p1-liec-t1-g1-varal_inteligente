@@ -70,18 +70,12 @@ mudanças rápidas de tempo;
 
 fumaça de vizinhos, churrasqueiras, queimadas ou vias movimentadas;
 
-falta de tempo para ficar “de olho” nas roupas.
+falta de tempo para ficar “de olho” nas roupas;
 
-Pessoas com rotina corrida
+Pessoas com rotina corrida;
 
-Estudantes, trabalhadores e famílias que passam grande parte do dia fora de casa e desejam uma solução que minimize o risco de perder uma lavagem inteira de roupas.
+Estudantes, trabalhadores e famílias que passam grande parte do dia fora de casa e desejam uma solução que minimize o risco de perder uma lavagem inteira de roupas;
 
-Pessoas com mobilidade reduzida ou idosos
+Pessoas com mobilidade reduzida ou idosos.
 
-Usuários que têm dificuldade de se deslocar rapidamente até o varal, mas que conseguem usar um celular para acompanhar o estado do sistema e acionar comandos básicos.
-
-Estudantes e entusiastas de tecnologia/IoT
-
-O projeto também serve como exemplo didático para quem deseja aprender sobre Arduino, sensores, comunicação Bluetooth e integração com aplicativos móveis.
-
-Em termos de perfil tecnológico, espera-se que os usuários finais tenham familiaridade básica com smartphones (instalar e usar aplicativos simples). A parte de configuração e montagem de hardware é mais voltada para alunos e makers, que podem atuar como “instaladores” da solução na casa do usuário final.
+Em termos tecnológico, espera-se apenas que os usuários tenham familiaridade básica com smartphones para fazer uso do Varal Inteligente.
