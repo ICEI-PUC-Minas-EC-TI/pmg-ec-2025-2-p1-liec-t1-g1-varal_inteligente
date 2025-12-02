@@ -1,29 +1,29 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-// Bluetooth HC-05: RX no 2, TX no 3
+
 SoftwareSerial BT(2, 3);  // RX, TX
 
-// Servo
+
 Servo varal;
 const int SERVO_PIN = 9;
 
-// Sensores (mesmos pinos que você já usa)
+
 const int PINO_CHUVA  = A0;
 const int PINO_FUMACA = A1;
 
-// Limiares (ajuste se precisar)
+
 int limiarChuva  = 500;  // chuva: valor < 500 = molhado
 int limiarFumaca = 35;   // fumaça: valor > 30 = fumaça
 
-// Estado do sistema
+
 bool varalFechado = false;
 
-// Leituras atuais
+
 int valorChuva  = 0;
 int valorFumaca = 0;
 
-// Antitremedeira de movimento
+
 unsigned long ultimoMovimento    = 0;
 const unsigned long intervaloMov = 3000; // 3s
 
@@ -45,7 +45,7 @@ void setup() {
 }
 
 void loop() {
-  // --------- LEITURA DOS SENSORES ---------
+ 
   valorChuva  = analogRead(PINO_CHUVA);
   valorFumaca = analogRead(PINO_FUMACA);
 
@@ -59,10 +59,10 @@ void loop() {
   Serial.print(valorFumaca);
   Serial.println(detectouFumaca ? " (FUMACA)" : " (OK)");
 
-  // --------- CONTROLE AUTOMATICO (APENAS FECHAR) ---------
+
   bool perigo = (detectouChuva || detectouFumaca);
 
-  // Se tiver chuva OU fumaça -> fecha sozinho (se ainda não estiver fechado)
+
   if (perigo && !varalFechado &&
       (millis() - ultimoMovimento > intervaloMov)) {
 
@@ -70,12 +70,9 @@ void loop() {
     moverVaral(true);
   }
 
-  // >>> IMPORTANTE:
-  // NÃO há mais reabertura automática quando o ambiente está seguro.
-  // Quando NÃO houver chuva nem fumaça, o varal só se mexe se o usuário mandar
-  // comando pelo Bluetooth.
 
-  // --------- COMANDOS VIA BLUETOOTH ---------
+
+  
   if (BT.available()) {
     char cmd = BT.read();
     Serial.print("Comando recebido: ");
@@ -91,7 +88,7 @@ void loop() {
         }
         break;
 
-      case 'E':   // ABRIR varal (expor)
+      case 'E':  
         if (perigo) {
           Serial.println("MANUAL BLOQUEADO: chuva/fumaca detectada, proibido abrir.");
         } else {
@@ -116,7 +113,7 @@ void loop() {
 
 void moverVaral(bool fechar) {
   if (fechar) {
-    varal.write(90);      // ajusta se precisar
+    varal.write(90);      
     varalFechado = true;
     Serial.println("Varal FECHADO (90 graus)");
   } else {
@@ -127,10 +124,7 @@ void moverVaral(bool fechar) {
   ultimoMovimento = millis();
 }
 
-// Envia 3 BYTES: [estado, umidade, fumaca]
-//  estado: 0 = aberto, 1 = fechado
-//  umidade: 0 = seco, 1 = umido
-//  fumaca: 0 = OK, 1 = fumaça detectada
+
 void enviarStatusBytes() {
   bool detectouChuva  = (valorChuva  < limiarChuva);
   bool detectouFumaca = (valorFumaca > limiarFumaca);
@@ -143,7 +137,7 @@ void enviarStatusBytes() {
   BT.write(umidByte);
   BT.write(fumaByte);
 
-  // Debug só no Serial (USB)
+
   Serial.print("Status bytes -> ");
   Serial.print((int)estadoByte);
   Serial.print(",");
