@@ -1,29 +1,30 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-SoftwareSerial BT(2, 3);  
+SoftwareSerial BT(2, 3); 
 
 
 Servo varal;
 const int SERVO_PIN = 9;
 
-
 const int PINO_CHUVA  = A0;
 const int PINO_FUMACA = A1;
 
 int limiarChuva  = 500;  
-int limiarFumaca = 50;   
+int limiarFumaca = 50;  
 
 bool varalFechado = false;
 
+
 int valorChuva  = 0;
 int valorFumaca = 0;
+
 
 unsigned long ultimoMovimento    = 0;
 const unsigned long intervaloMov = 3000; 
 
 void moverVaral(bool fechar);
-void enviarStatusTexto();
+void enviarStatusBytes();
 
 void setup() {
   Serial.begin(9600);
@@ -32,7 +33,7 @@ void setup() {
   Serial.println("Varal automatico - Arduino + HC05");
 
   varal.attach(SERVO_PIN);
-  varal.write(0);         
+  varal.write(0);  
   varalFechado = false;
 
   pinMode(PINO_CHUVA,  INPUT);
@@ -54,11 +55,12 @@ void loop() {
   Serial.print(valorFumaca);
   Serial.println(detectouFumaca ? " (FUMACA)" : " (OK)");
 
+  
   if (alerta && !varalFechado &&
       (millis() - ultimoMovimento > intervaloMov)) {
 
-    Serial.println("AUTO: fechando por alerta (chuva ou fumaça)...");
-    moverVaral(true);   
+    Serial.println("AUTO: fechando por sensor (chuva ou fumaça)...");
+    moverVaral(true); 
   }
 
   
@@ -70,13 +72,13 @@ void loop() {
     switch (cmd) {
       case 'G':   
         Serial.println("MANUAL: fechar varal (G)");
-        moverVaral(true);  
+        moverVaral(true);
         break;
 
-      case 'E':   
+      case 'E':  
         if (alerta) {
+        
           Serial.println("MANUAL: comando E IGNORADO (alerta ativo)");
-         
         } else {
           Serial.println("MANUAL: abrir varal (E)");
           moverVaral(false);
@@ -85,7 +87,7 @@ void loop() {
 
       case 'S':   
         Serial.println("BT: pedido de STATUS (S)");
-        enviarStatusTexto();
+        enviarStatusBytes();
         break;
 
       default:
@@ -111,7 +113,7 @@ void moverVaral(bool fechar) {
 }
 
 
-void enviarStatusTexto() {
+void enviarStatusBytes() {
   bool detectouChuva  = (valorChuva  < limiarChuva);
   bool detectouFumaca = (valorFumaca > limiarFumaca);
 
@@ -119,15 +121,15 @@ void enviarStatusTexto() {
   byte umidByte   = detectouChuva  ? 1 : 0;
   byte fumaByte   = detectouFumaca ? 1 : 0;
 
- 
-  BT.print(estadoByte);
-  BT.print(umidByte);
-  BT.print(fumaByte);
+  BT.write(estadoByte);
+  BT.write(umidByte);
+  BT.write(fumaByte);
 
-  Serial.print("Status texto -> ");
-  Serial.print(estadoByte);
-  Serial.print(";");
-  Serial.print(umidByte);
-  Serial.print(";");
-  Serial.println(fumaByte);
+  
+  Serial.print("Status bytes -> ");
+  Serial.print((int)estadoByte);
+  Serial.print(",");
+  Serial.print((int)umidByte);
+  Serial.print(",");
+  Serial.println((int)fumaByte);
 }
