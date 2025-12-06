@@ -16,7 +16,6 @@
 * Gabriel Maia Simões de Matos
 * Eduarda Katherine Dutra Teixeira
 * Ana Clara Barboza da Silva
-* Bolivar Mauricio Gomes Siqueira
 * Fernanda Ayrosa Menezes Silva
 
 ## Orientador
